@@ -10,7 +10,7 @@ use Cexio\Structures\TickerStructure;
 class Ticker {
     protected  $ticker;
     
-    public function __construct(\stdClass $ticker,$symbol1,$symbol2) {
+    public function __construct(\stdClass $ticker,string $symbol1,string $symbol2) {
         
         $tickerStructure = new TickerStructure();
         $tickerStructure->setAsk($ticker->ask);

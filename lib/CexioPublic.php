@@ -13,22 +13,22 @@ use Error\CexioHttpException;
  */
 class CexioPublic {
 
-    private static function __getClient()
-    {
+    private static function __getClient() {
         return new \GuzzleHttp\Client();
     }
-    private static function validateHttpResponseAndReturn($response,$endpont) : \stdClass
-    {
+
+    private static function validateHttpResponseAndReturn($response, $endpont): \stdClass {
         if ($response->getStatusCode() != 200) {
-            throw new CexioHttpException("Error while connecting to ".$endpont." endpoint", $response->getStatusCode());
+            throw new CexioHttpException("Error while connecting to " . $endpont . " endpoint", $response->getStatusCode());
         }
         $responseObject = json_decode($response->getBody()->getContents());
         if (!$responseObject || !$responseObject instanceof \stdClass) {
             throw new InvalidResponseException("Cannot parse json from response");
         }
-        
+
         return $responseObject;
     }
+
     /**
      * 
      * @return CurrencyLimit
@@ -41,10 +41,27 @@ class CexioPublic {
         return new Responses\CurrencyLimit($responseObject->data->pairs);
     }
 
-    public static function getTicker($symbol1,$symbol2): Responses\Ticker {
-        $res = self::__getClient()->request('GET', Endpoints::ticker.'/'.$symbol1.'/'.$symbol2);
+    /**
+     * 
+     * @param type $symbol1
+     * @param type $symbol2
+     * @return \Cexio\Responses\Ticker
+     */
+    public static function getTicker($symbol1, $symbol2): Responses\Ticker {
+        $res = self::__getClient()->request('GET', Endpoints::ticker . '/' . $symbol1 . '/' . $symbol2);
         $responseObject = self::validateHttpResponseAndReturn($res, Endpoints::ticker);
-        return new Responses\Ticker($responseObject,$symbol1,$symbol2);
+        return new Responses\Ticker($responseObject, $symbol1, $symbol2);
+    }
+    /**
+     * 
+     * @param type $symbol1
+     * @param type $symbol2
+     * @return \Cexio\Responses\Tickers
+     */
+    public static function getTickers($symbol1, $symbol2): Responses\Tickers {
+        $res = self::__getClient()->request('GET', Endpoints::tickers . '/' . $symbol1 . '/' . $symbol2);
+        $responseObject = self::validateHttpResponseAndReturn($res, Endpoints::tickers);
+        return new Responses\Tickers($responseObject->data);
     }
 
 }
