@@ -8,4 +8,5 @@ namespace Cexio;
 class Endpoints {
     
     const currency_limit = 'https://cex.io/api/currency_limits';
+    const ticker = 'https://cex.io/api/ticker';
 }

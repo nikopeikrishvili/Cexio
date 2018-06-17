@@ -13,7 +13,7 @@ namespace Cexio\Structures;
  * }
  * @author niko.peikrishvili
  */
-class Pair {
+class PairStructure {
     private $symbol1;
     private $symbol2;
     private $minLotSize;

@@ -1,7 +1,7 @@
 <?php
 namespace Cexio\Responses;
 
-use \Cexio\Structures\Pair;
+use Cexio\Structures\PairStructure;
 use \Cexio\Error\SymbolNotFoundException;
 
 /**
@@ -16,7 +16,7 @@ class CurrencyLimit {
 
     public function __construct(array $pairs) {
         foreach ($pairs as $pair) {
-            $pairStructure = new Pair();
+            $pairStructure = new PairStructure();
             $pairStructure->setSymbol1($pair->symbol1);
             $pairStructure->setSymbol2($pair->symbol2);
             $pairStructure->setMinLotSize($pair->minLotSize);
@@ -29,7 +29,7 @@ class CurrencyLimit {
         }
     }
 
-    public function getLimit(string $symbol1, string $symbol2): Pair {
+    public function getLimit(string $symbol1, string $symbol2): PairStructure {
         if (!key_exists($symbol1, $this->pairWithSymbols)) {
             throw new SymbolNotFoundException("Symbol " . $symbol1 . " was not fount in list");
         }

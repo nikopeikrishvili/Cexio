@@ -30,7 +30,7 @@ class CexioCurrencyLimitTest extends TestCase{
         $symbol1 = 'BTC';
         $symbol2 = 'USD';
         $pair = $response->getLimit($symbol1,$symbol2);
-        $this->assertInstanceOf(\Cexio\Structures\Pair::class,$pair);
+        $this->assertInstanceOf(\Cexio\Structures\PairStructure::class,$pair);
         $this->assertSame($symbol1,$pair->getSymbol1());
         $this->assertSame($symbol2,$pair->getSymbol2());
     }
