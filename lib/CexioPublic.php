@@ -52,6 +52,7 @@ class CexioPublic {
         $responseObject = self::validateHttpResponseAndReturn($res, Endpoints::ticker);
         return new Responses\Ticker($responseObject, $symbol1, $symbol2);
     }
+
     /**
      * 
      * @param type $symbol1
@@ -62,6 +63,26 @@ class CexioPublic {
         $res = self::__getClient()->request('GET', Endpoints::tickers . '/' . $symbol1 . '/' . $symbol2);
         $responseObject = self::validateHttpResponseAndReturn($res, Endpoints::tickers);
         return new Responses\Tickers($responseObject->data);
+    }
+
+    /**
+     * 
+     * @param type $symbol1
+     * @param type $symbol2
+     * @return \Cexio\Responses\LastPrice
+     */
+    public static function getLastPrice($symbol1, $symbol2): Responses\LastPrice {
+        $res = self::__getClient()->request('GET', Endpoints::last_price . '/' . $symbol1 . '/' . $symbol2);
+        $responseObject = self::validateHttpResponseAndReturn($res, Endpoints::last_price);
+        return new Responses\LastPrice($responseObject);
+    }
+    
+    public static function getLastPrices(... $symbols): Responses\LastPrices
+    {
+        
+        $res = self::__getClient()->request('GET', trim(Endpoints::last_prices ."/". implode('/' ,$symbols),"/"));
+        $responseObject = self::validateHttpResponseAndReturn($res, Endpoints::last_prices);
+        return new Responses\LastPrices($responseObject->data);
     }
 
 }

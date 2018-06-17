@@ -42,7 +42,6 @@ class CexioTickersTest extends TestCase {
         $symbol1 = 'BTC';
         $symbol2 = 'USD';
         $response = CexioPublic::getTickers($symbol1, $symbol2);
-
         $response->getTicker('BTC2', $symbol2);
     }
 
