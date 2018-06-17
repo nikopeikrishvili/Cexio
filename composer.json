@@ -1,0 +1,19 @@
+{
+    "require": {
+       "guzzlehttp/guzzle": "6.3.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "7.2.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Cexio\\": "lib"
+        }
+    },
+    "autoload-dev":
+            {
+                "psr-4": {
+                    "CexioTests\\": "tests/"
+                }
+            }
+}
