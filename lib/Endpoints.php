@@ -12,4 +12,6 @@ class Endpoints {
     const tickers = 'https://cex.io/api/tickers';
     const last_price = 'https://cex.io/api/last_price';
     const last_prices = 'https://cex.io/api/last_prices';
+    const convert = 'https://cex.io/api/convert';
+    const price_stats = 'https://cex.io/api/price_stats';
 }

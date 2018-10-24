@@ -2,8 +2,8 @@
 
 namespace Cexio;
 
-use Error\InvalidResponseException;
-use Error\CexioHttpException;
+use Cexio\Error\InvalidResponseException;
+use Cexio\Error\CexioHttpException;
 
 /**
  * CexioPublic is a class that providing cex.io API client functionality for
@@ -22,7 +22,18 @@ class CexioPublic {
             throw new CexioHttpException("Error while connecting to " . $endpont . " endpoint", $response->getStatusCode());
         }
         $responseObject = json_decode($response->getBody()->getContents());
-        if (!$responseObject || !$responseObject instanceof \stdClass) {
+        if (!$responseObject || (!$responseObject instanceof \stdClass && !is_array($responseObject))) {
+            throw new InvalidResponseException("Cannot parse json from response");
+        }
+
+        return $responseObject;
+    }
+    private static function validateHttpResponseAndReturnArray($response, $endpont): Array {
+        if ($response->getStatusCode() != 200) {
+            throw new CexioHttpException("Error while connecting to " . $endpont . " endpoint", $response->getStatusCode());
+        }
+        $responseObject = json_decode($response->getBody()->getContents());
+        if (!$responseObject || !is_array($responseObject)) {
             throw new InvalidResponseException("Cannot parse json from response");
         }
 
@@ -76,13 +87,46 @@ class CexioPublic {
         $responseObject = self::validateHttpResponseAndReturn($res, Endpoints::last_price);
         return new Responses\LastPrice($responseObject);
     }
-    
-    public static function getLastPrices(... $symbols): Responses\LastPrices
-    {
-        
-        $res = self::__getClient()->request('GET', trim(Endpoints::last_prices ."/". implode('/' ,$symbols),"/"));
+
+    /**
+     * 
+     * @param type $symbols
+     * @return \Cexio\Responses\LastPrices
+     */
+    public static function getLastPrices(... $symbols): Responses\LastPrices {
+
+        $res = self::__getClient()->request('GET', trim(Endpoints::last_prices . "/" . implode('/', $symbols), "/"));
         $responseObject = self::validateHttpResponseAndReturn($res, Endpoints::last_prices);
         return new Responses\LastPrices($responseObject->data);
+    }
+
+    /**
+     * 
+     * @param type $symbol1
+     * @param type $symbol2
+     * @param type $amount
+     * @return \Cexio\Responses\Converter
+     */
+    public static function getConverter($symbol1, $symbol2, $amount): Responses\Converter {
+        $res = self::__getClient()->request('POST', Endpoints::convert . '/' . $symbol1 . '/' . $symbol2, ['form_params' => ['amnt' => $amount]]);
+        $responseObject = self::validateHttpResponseAndReturn($res, Endpoints::convert);
+        return new Responses\Converter($responseObject, $symbol1, $symbol2);
+    }
+
+    /**
+     * 
+     * @param string $symbol1
+     * @param string $symbol2
+     * @param int $lastHour
+     * @param int $maxRespArrSize
+     * @return \Cexio\Responses\PriceStats
+     */
+    public static function getPriceStats(string $symbol1, string $symbol2, int $lastHour, int $maxRespArrSize): Responses\PriceStats {
+        $res = self::__getClient()->request('POST', Endpoints::price_stats . '/' . $symbol1 . '/' . $symbol2, ['form_params' => 
+            ['lastHours' => $lastHour,'maxRespArrSize'=>$maxRespArrSize]
+        ]);
+        $responseArray = self::validateHttpResponseAndReturnArray($res, Endpoints::price_stats);
+        return new Responses\PriceStats($responseArray);
     }
 
 }
